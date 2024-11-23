@@ -10,7 +10,7 @@ import sys
 from tqdm import tqdm
 
 from harvaestus.backlog import Backlog
-from harvaestus.errors import FixableError
+from harvaestus.errors import FixableError, IgnoreKey
 from harvaestus.storage import InMemoryStorage, BaseStorage
 
 logger = logging.getLogger(__name__)
@@ -116,6 +116,8 @@ class Crawler(object):
 
         except FixableError as e:
             self.handle_fixable_error(e, key)
+        except IgnoreKey:
+            return
         except AssertionError as e:
             self.handle_fixable_error(FixableError(e.args[0]), key)
         except Exception as e:

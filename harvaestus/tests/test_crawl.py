@@ -4,7 +4,7 @@ from unittest.mock import patch
 from harvaestus import crawl
 from harvaestus.backlog import Backlog
 from harvaestus.crawler import Crawler
-from harvaestus.errors import FixableError
+from harvaestus.errors import FixableError, IgnoreKey
 from harvaestus.storage import InMemoryStorage
 
 
@@ -222,3 +222,13 @@ class TestCrawl(TestCase):
 
         with self.assertRaises(Exception):
             crawl(generator, backlog=self.backlog)
+
+    def test_ignore_key_error_ignores_key(self):
+        def fn(key):
+            raise IgnoreKey
+
+        self.backlog.add(1)
+        storage = InMemoryStorage()
+        crawl(fn, backlog=self.backlog, storage=storage)
+
+        self.assertNotIn(1, storage.data)

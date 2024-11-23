@@ -17,6 +17,10 @@ class FixableError(HarvaestusError):
         return super().__eq__(other)
 
 
+class IgnoreKey(HarvaestusError):
+    pass
+
+
 class BacklogError(HarvaestusError):
     pass
 
